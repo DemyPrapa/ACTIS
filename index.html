@@ -1,0 +1,554 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>A.C.T.I.S.</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@500;600;700&display=swap">
+<style>
+/* Layout concept: one long scroll, thermal motif. Cool teal = comfort/cooling, warm coral = heat only. The hero chart is the single bold moment; everything else stays quiet. */
+:root {
+  --bg: #F2F7F9;
+  --surface: #FFFFFF;
+  --fg: #0E2A33;
+  --muted: #4A646E;
+  --line: #D3E1E7;
+  --cool: #0B7A8F;
+  --cool-soft: #D8EDF1;
+  --on-cool: #FFFFFF;
+  --heat: #D4502F;
+  --heat-soft: #FBE5DE;
+  --font-display: "Sora", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1A20;
+    --surface: #112730;
+    --fg: #E6F1F4;
+    --muted: #9DB5BD;
+    --line: #25414B;
+    --cool: #4FC3D6;
+    --cool-soft: #123740;
+    --on-cool: #062228;
+    --heat: #F08A6E;
+    --heat-soft: #3A2119;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1A20;
+  --surface: #112730;
+  --fg: #E6F1F4;
+  --muted: #9DB5BD;
+  --line: #25414B;
+  --cool: #4FC3D6;
+  --cool-soft: #123740;
+  --on-cool: #062228;
+  --heat: #F08A6E;
+  --heat-soft: #3A2119;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+a { color: var(--cool); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--cool); outline-offset: 3px; border-radius: 4px; }
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.band { padding-block: 72px; }
+.band + .band { border-top: 1px solid var(--line); }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cool);
+  margin-bottom: 14px;
+}
+.hero .eyebrow { font-size: 17px; letter-spacing: 0.08em; }
+.section-head { display: grid; gap: 14px; max-width: 720px; margin-bottom: 40px; }
+.section-head h2 { font-size: clamp(28px, 4vw, 40px); }
+.lede { color: var(--muted); font-size: 18px; max-width: 62ch; }
+
+/* header */
+.site-header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 24px; letter-spacing: 0.02em; color: var(--fg); text-decoration: none; }
+.brand svg { flex: none; }
+.nav { display: flex; align-items: center; gap: 22px; }
+.nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; }
+.nav a:hover { color: var(--fg); }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.lang button {
+  font: 500 12px var(--font-mono);
+  letter-spacing: 0.06em;
+  padding: 6px 10px;
+  background: transparent;
+  color: var(--muted);
+  border: 0;
+  cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--cool); color: var(--on-cool); }
+
+/* hero */
+.hero { padding-block: 64px 56px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 48px; align-items: center; }
+.hero h1 { font-size: clamp(34px, 5.2vw, 56px); font-weight: 700; margin-bottom: 20px; }
+.hero .lede { margin-bottom: 28px; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid var(--cool);
+}
+.btn.primary { background: var(--cool); color: var(--on-cool); }
+.btn.ghost { color: var(--cool); background: transparent; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.facts span { display: inline-flex; align-items: center; gap: 8px; }
+.facts span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cool); }
+.thermal-rule { height: 4px; background: linear-gradient(90deg, var(--cool), var(--heat)); }
+
+.chart-card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; min-width: 0; }
+.chart-card h2 { font-size: 16px; font-family: var(--font-display); margin-bottom: 12px; }
+.chart-card svg { display: block; width: 100%; height: auto; }
+.chart-card .t { fill: var(--muted); font-family: var(--font-mono); font-size: 11px; }
+.legend { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; font-size: 14px; }
+.legend li { display: flex; align-items: flex-start; gap: 10px; }
+.legend i { flex: none; width: 22px; height: 0; border-top: 3px solid; margin-top: 10px; }
+.legend .l-none i { border-color: var(--muted); border-top-width: 2px; }
+.legend .l-react i { border-color: var(--heat); }
+.legend .l-actis i { border-color: var(--cool); }
+.caption { margin-top: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+/* problem */
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 40px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; min-width: 0; }
+.stat b { display: block; font-family: var(--font-display); font-size: 44px; line-height: 1; color: var(--heat); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
+.stat p { color: var(--muted); font-size: 15px; }
+.two-col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+.two-col h3 { font-size: 20px; margin-bottom: 12px; }
+.two-col p { color: var(--muted); max-width: 60ch; }
+
+/* solution */
+.components { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; margin-bottom: 36px; }
+.component { border-top: 1px solid var(--line); padding: 20px 0 28px; min-width: 0; }
+.component h3 { font-size: 17px; margin-bottom: 8px; }
+.component p { color: var(--muted); font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chips span { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; background: var(--cool-soft); color: var(--cool); }
+
+/* how */
+.steps { list-style: none; margin: 0 0 36px; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; counter-reset: s; }
+.step { position: relative; padding-top: 28px; border-top: 3px solid var(--cool); min-width: 0; }
+.step:nth-child(3) { border-color: var(--cool); }
+.step .n { position: absolute; top: -3px; left: 0; transform: translateY(-100%); font-family: var(--font-mono); font-size: 12px; color: var(--cool); padding-bottom: 8px; }
+.step h3 { font-size: 20px; margin-bottom: 8px; }
+.step p { color: var(--muted); font-size: 15px; }
+.callout { background: var(--cool-soft); border-radius: 12px; padding: 24px 28px; font-size: 18px; max-width: 760px; font-family: var(--font-display); font-weight: 500; line-height: 1.4; }
+
+/* who */
+.audience { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 48px; }
+.aud { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; min-width: 0; }
+.aud h3 { font-size: 18px; margin-bottom: 8px; }
+.aud p { color: var(--muted); font-size: 15px; }
+.gap-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; }
+.gap-box h3 { font-size: 20px; margin-bottom: 12px; }
+.gap-box p { color: var(--muted); }
+.gaps { display: grid; gap: 14px; }
+.gaps div { border-left: 3px solid var(--heat); padding-left: 16px; }
+.gaps b { display: block; font-family: var(--font-display); font-size: 15px; margin-bottom: 2px; }
+.gaps span { color: var(--muted); font-size: 15px; }
+
+/* team */
+.team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.person { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 24px; }
+.avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--cool-soft); color: var(--cool); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 18px; }
+.person h3 { font-size: 18px; }
+.role { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cool); margin: 4px 0 10px; }
+.person p { color: var(--muted); font-size: 15px; }
+
+/* progress */
+.progress { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.milestones { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.milestones li { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; font-weight: 500; }
+.milestones li::before { content: ""; flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--cool) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-6.5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 20px no-repeat; }
+
+footer { border-top: 1px solid var(--line); padding-block: 40px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: grid; gap: 8px; }
+footer strong { color: var(--fg); font-family: var(--font-display); }
+
+@media (max-width: 900px) {
+  .hero-grid, .two-col, .gap-box, .progress { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .stats, .components { grid-template-columns: minmax(0, 1fr); }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 44px; }
+  .audience, .team { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .nav a { display: none; }
+  .band { padding-block: 52px; }
+  .hero { padding-block: 40px 40px; }
+}
+@media (max-width: 480px) {
+  .steps { grid-template-columns: minmax(0, 1fr); }
+  .person { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="A.C.T.I.S.">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+        <defs><linearGradient id="mark" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#0B7A8F"/><stop offset="1" stop-color="#D4502F"/></linearGradient></defs>
+        <rect x="9" y="2" width="6" height="14" rx="3" fill="url(#mark)"/>
+        <circle cx="12" cy="18" r="4.5" fill="url(#mark)"/>
+      </svg>
+      A.C.T.I.S.
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#problem" data-el="Πρόβλημα">Problem</a>
+      <a href="#solution" data-el="Λύση">Solution</a>
+      <a href="#how" data-el="Πώς λειτουργεί">How it works</a>
+      <a href="#who" data-el="Για ποιους">Who it serves</a>
+      <a href="#team" data-el="Ομάδα">Team</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="lang-en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-el" aria-pressed="false">EL</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">Adaptive Cooling and Temperature Intelligence System</p>
+        <h1 data-el="Άνεση που φτάνει πριν από τη ζέστη.">Comfort that arrives before the heat does.</h1>
+        <p class="lede" data-el="Το A.C.T.I.S. είναι ένα προσαρμοστικό σύστημα θερμικής διαχείρισης για κηδεμόνες σκολίωσης και προσθετικές θήκες (sockets). Παρακολουθεί τη θερμοκρασία και την υγρασία του δέρματος, προβλέπει την άνοδο της θερμοκρασίας και ψύχει προληπτικά.">A.C.T.I.S. is an adaptive thermal management system for scoliosis braces and prosthetic sockets. It tracks skin temperature and humidity, predicts rising heat and cools ahead of discomfort.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="#how" data-el="Δες πώς λειτουργεί">See how it works</a>
+          <a class="btn ghost" href="#team" data-el="Γνώρισε την ομάδα">Meet the team</a>
+        </div>
+        <div class="facts">
+          <span data-el="Έργο πρώιμου σταδίου">Early-stage project</span>
+          <span data-el="Ομάδα από τον Οκτώβριο 2026">Team formed October 2026</span>
+          <span data-el="ΕΜΠ (NTUA), Translational Engineering in Health and Medicine">NTUA, Translational Engineering in Health and Medicine</span>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h2 data-el="Αντιδραστική έναντι προβλεπτικής ψύξης">Reactive versus predictive cooling</h2>
+        <svg viewBox="0 0 640 300" role="img" aria-label="Illustrative chart: skin temperature over time with no cooling, with threshold-triggered cooling, and with predictive cooling that stays below the discomfort level.">
+          <rect x="60" y="30" width="540" height="80" fill="var(--heat-soft)"/>
+          <line x1="60" y1="260" x2="600" y2="260" stroke="var(--line)" stroke-width="2"/>
+          <line x1="60" y1="30" x2="60" y2="260" stroke="var(--line)" stroke-width="2"/>
+          <line x1="60" y1="110" x2="600" y2="110" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="6 5"/>
+          <text class="t" x="596" y="104" text-anchor="end" data-el="όριο δυσφορίας">discomfort level</text>
+          <text class="t" x="592" y="76" text-anchor="end" data-el="χωρίς ψύξη">no cooling</text>
+          <text class="t" x="600" y="284" text-anchor="end" data-el="χρόνος χρήσης">time worn</text>
+          <text class="t" x="16" y="145" text-anchor="middle" transform="rotate(-90 16 145)" data-el="θερμοκρασία δέρματος">skin temperature</text>
+          <path d="M60,240 C200,230 320,140 600,48" fill="none" stroke="var(--muted)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M60,240 C200,230 300,160 350,110 C380,78 430,72 470,90 S550,135 600,150" fill="none" stroke="var(--heat)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M60,240 C180,232 250,185 310,150 S400,135 450,140 S540,160 600,165" fill="none" stroke="var(--cool)" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="350" cy="110" r="6" fill="var(--surface)" stroke="var(--heat)" stroke-width="3"/>
+          <circle cx="252" cy="183" r="6" fill="var(--surface)" stroke="var(--cool)" stroke-width="3"/>
+        </svg>
+        <ul class="legend">
+          <li class="l-none"><i></i><span data-el="Χωρίς ψύξη: η θερμοκρασία συνεχίζει να ανεβαίνει.">No cooling: temperature keeps climbing.</span></li>
+          <li class="l-react"><i></i><span data-el="Σταθερό όριο: η ψύξη ξεκινά αφού φτάσει η δυσφορία.">Fixed threshold: cooling starts once discomfort is reached.</span></li>
+          <li class="l-actis"><i></i><span data-el="A.C.T.I.S.: η ψύξη ξεκινά μόλις προβλεφθεί η άνοδος.">A.C.T.I.S.: cooling starts as the rise is predicted.</span></li>
+        </ul>
+        <p class="caption" data-el="Εννοιολογική απεικόνιση, όχι μετρημένα δεδομένα. Οι κύκλοι δείχνουν πότε ξεκινά η ψύξη.">Conceptual illustration, not measured data. Circles mark when cooling starts.</p>
+      </div>
+    </div>
+  </section>
+  <div class="thermal-rule" aria-hidden="true"></div>
+
+  <section class="band" id="problem">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-el="Το πρόβλημα">The problem</p>
+        <h2 data-el="Απαραίτητα βοηθήματα που εγκλωβίζουν ζέστη και ιδρώτα.">Essential devices that trap heat and sweat.</h2>
+        <p class="lede" data-el="Οι κηδεμόνες σκολίωσης και τα προσθετικά μέλη είναι απαραίτητα, όμως η παρατεταμένη χρήση μπορεί να προκαλέσει θερμική δυσφορία. Ο αντίκτυπος διαφέρει ανά ομάδα, αλλά η αιτία είναι κοινή: μια εφαρμοστή συσκευή που κρατά τη ζέστη και την υγρασία πάνω στο δέρμα.">Scoliosis braces and prosthetic limbs are essential, yet prolonged use can cause thermal discomfort. The impact differs between the two groups, but the cause is shared: a close-fitting device that holds heat and moisture against the skin.</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <b data-el="18–20 ώρες">18–20 h</b>
+          <p data-el="Ημερήσια χρήση κηδεμόνα που συχνά συνιστάται, γι' αυτό η άνεση επηρεάζει τη συμμόρφωση.">Daily brace wear is often prescribed, which is why comfort matters for adherence.</p>
+        </div>
+        <div class="stat">
+          <b>27%</b>
+          <p data-el="των 44 γονέων ανέφεραν τον υπερβολικό ιδρώτα ως λόγο που τα παιδιά τους δίσταζαν να φορέσουν τον κηδεμόνα (μελέτη 2025).">of 44 parents cited excessive sweating as a reason their children were reluctant to wear the brace (2025 study).</p>
+        </div>
+        <div class="stat">
+          <b>54%</b>
+          <p data-el="μέσο ποσοστό χρηστών προσθετικού κάτω άκρου που αντιμετωπίζουν θερμικά προβλήματα (ανασκόπηση 2025).">average share of lower-limb prosthesis users who experience thermal-related problems (2025 scoping review).</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <h3 data-el="Κηδεμόνες σκολίωσης">Scoliosis braces</h3>
+          <p data-el="Η θεραπεία με κηδεμόνα στοχεύει να αποτρέψει την επιδείνωση της σκολιωτικής καμπυλότητας κατά την ανάπτυξη. Οι άκαμπτοι, εξατομικευμένοι πλαστικοί κηδεμόνες περιβάλλουν τον άνω κορμό και, επειδή είναι μη πορώδεις, περιορίζουν την απαγωγή θερμότητας και την εξάτμιση του ιδρώτα. Η ζέστη και η δυσφορία δυσκολεύουν τη χρήση, κάτι που μπορεί να μειώσει τη συμμόρφωση, να επηρεάσει τα αποτελέσματα και να αυξήσει τον κίνδυνο επιδείνωσης, φέρνοντας τον ασθενή πιο κοντά στο όριο της χειρουργικής επέμβασης.">Brace treatment aims to stop the spinal curve from progressing during growth. Rigid, custom-made plastic braces enclose the upper torso, and their non-porous design limits heat loss and sweat evaporation. Heat and discomfort make the brace hard to wear, which can undermine adherence, compromise outcomes and raise the risk of curve progression, bringing patients closer to the threshold for surgery.</p>
+        </div>
+        <div>
+          <h3 data-el="Προσθετικές θήκες (sockets)">Prosthetic sockets</h3>
+          <p data-el="Η θήκη εφαρμόζει γύρω από το υπολειπόμενο άκρο, το συνδέει με την πρόθεση και μεταφέρει το βάρος και τις δυνάμεις κατά την κίνηση. Στη διεπιφάνεια αυτή συσσωρεύονται θερμότητα, υγρασία, πίεση και τριβή, προκαλώντας δυσφορία και δερματικό ερεθισμό, και μπορούν να δυσκολέψουν τη χρήση της πρόθεσης στην καθημερινότητα.">The socket fits around the residual limb, connects it to the prosthesis and transfers body weight and forces during movement. Heat, moisture, pressure and friction build up at this interface, causing discomfort and skin irritation, and can make the prosthesis harder to wear in everyday life.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="solution">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-el="Η λύση">The solution</p>
+        <h2 data-el="Ένα συμπαγές σύστημα για δύο εφαρμογές.">One compact system for two applications.</h2>
+        <p class="lede" data-el="Το A.C.T.I.S. είναι ένα συμπαγές σύστημα θερμικής διαχείρισης με μπαταρία, σχεδιασμένο να είναι λεπτό, ελαφρύ, αθόρυβο και διακριτικό. Προσαρμόζεται τόσο σε κηδεμόνες σκολίωσης όσο και σε προσθετικές θήκες.">A.C.T.I.S. is a compact, battery-powered thermal management system designed to be thin, lightweight, quiet and discreet. It adapts to both scoliosis braces and prosthetic sockets.</p>
+      </div>
+
+      <div class="components">
+        <div class="component">
+          <h3 data-el="Αίσθηση και έλεγχος">Sensing and control</h3>
+          <p data-el="Λεπτοί αισθητήρες καταγράφουν θερμοκρασία δέρματος και τοπική υγρασία, ενώ ένας συμπαγής μικροελεγκτής διαχειρίζεται το σύστημα.">Thin sensors track skin temperature and local humidity, and a compact microcontroller runs the system.</p>
+        </div>
+        <div class="component">
+          <h3 data-el="Θερμοηλεκτρική ψύξη">Thermoelectric cooling</h3>
+          <p data-el="Θερμοηλεκτρικά στοιχεία παρέχουν ενεργητική ψύξη σε χαμηλό προφίλ.">Thermoelectric elements provide active cooling in a low-profile form.</p>
+        </div>
+        <div class="component">
+          <h3 data-el="Στρώμα διάχυσης θερμότητας">Thermal-spreading layer</h3>
+          <p data-el="Ένα εσωτερικό στρώμα διανέμει την ψύξη σε όλη την επιφάνεια επαφής με το δέρμα.">An internal layer distributes cooling across the whole skin-contact area.</p>
+        </div>
+        <div class="component">
+          <h3 data-el="Παθητική ψύκτρα">Passive heat sink</h3>
+          <p data-el="Μια χαμηλού προφίλ ψύκτρα διαχέει τη θερμότητα που απομακρύνεται από το δέρμα.">A low-profile heat sink dissipates the heat drawn away from the skin.</p>
+        </div>
+        <div class="component">
+          <h3 data-el="Υλικά αλλαγής φάσης (PCM)">Phase-change materials (PCM)</h3>
+          <p data-el="Τα PCM λειτουργούν μαζί με τα θερμοηλεκτρικά στοιχεία για τη διαχείριση της θερμότητας.">PCM work alongside the thermoelectric components to manage heat.</p>
+        </div>
+        <div class="component">
+          <h3 data-el="Αναπνεύσιμα υλικά">Breathable materials</h3>
+          <p data-el="Αναπνεύσιμα υλικά συμβάλλουν στη διαχείριση της υγρασίας.">Breathable materials further support moisture management.</p>
+        </div>
+      </div>
+
+      <div class="chips" aria-label="Design goals">
+        <span data-el="Λεπτό">Thin</span>
+        <span data-el="Ελαφρύ">Lightweight</span>
+        <span data-el="Αθόρυβο">Quiet</span>
+        <span data-el="Διακριτικό">Discreet</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-el="Πώς λειτουργεί">How it works</p>
+        <h2 data-el="Ένας κύκλος που μαθαίνει τον χρήστη.">A loop that learns the wearer.</h2>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <span class="n">01</span>
+          <h3 data-el="Αίσθηση">Sense</h3>
+          <p data-el="Αισθητήρες καταγράφουν τη θερμοκρασία και την υγρασία του δέρματος καθ' όλη τη διάρκεια της χρήσης.">Sensors record skin temperature and humidity for as long as the device is worn.</p>
+        </li>
+        <li class="step">
+          <span class="n">02</span>
+          <h3 data-el="Πρόβλεψη">Predict</h3>
+          <p data-el="Μοντέλα μηχανικής μάθησης αναλύουν τα προσωπικά μοτίβα θερμοκρασίας και υγρασίας και προβλέπουν δυσμενείς μεταβολές.">Machine learning models analyse the wearer's own temperature and humidity patterns and anticipate unfavourable changes.</p>
+        </li>
+        <li class="step">
+          <span class="n">03</span>
+          <h3 data-el="Ψύξη">Cool</h3>
+          <p data-el="Η ψύξη ξεκινά πριν η συσσώρευση θερμότητας προκαλέσει δυσφορία και προσαρμόζεται στις ανάγκες του χρήστη.">Cooling starts before heat build-up causes discomfort and adjusts to the wearer's needs.</p>
+        </li>
+        <li class="step">
+          <span class="n">04</span>
+          <h3 data-el="Έλεγχος">Review</h3>
+          <p data-el="Η εφαρμογή με Bluetooth δείχνει ζωντανές μετρήσεις και ιστορικό, και ο χρήστης μπορεί να ρυθμίσει την ψύξη χειροκίνητα.">A Bluetooth mobile app shows live readings and history, and the wearer can adjust cooling manually.</p>
+        </li>
+      </ol>
+
+      <p class="callout" data-el="Αντί να ενεργοποιείται σε σταθερή θερμοκρασία, ο ελεγκτής μαθαίνει τα μοτίβα του κάθε χρήστη. Ο χρήστης διατηρεί τον χειροκίνητο έλεγχο.">Instead of switching on at a fixed temperature, the controller learns each wearer's patterns. Users keep manual control.</p>
+    </div>
+  </section>
+
+  <section class="band" id="who">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-el="Για ποιους">Who it serves</p>
+        <h2 data-el="Για όσους φορούν τα βοηθήματα και όσους τα προσαρμόζουν.">For the people who wear the devices and the people who fit them.</h2>
+        <p class="lede" data-el="Το A.C.T.I.S. ακολουθεί μοντέλο B2B2C: απευθύνεται απευθείας στους χρήστες και τους προσεγγίζει μέσω συνεργατών στην ορθωτική και προσθετική.">A.C.T.I.S. follows a B2B2C model: it serves users directly and reaches them through orthotic and prosthetic partners.</p>
+      </div>
+
+      <div class="audience">
+        <div class="aud">
+          <h3 data-el="Άτομα που φορούν κηδεμόνα σκολίωσης">People in brace treatment</h3>
+          <p data-el="Συμπεριλαμβανομένων γονέων και φροντιστών εφήβων με ιδιοπαθή σκολίωση, που μπορεί να το αγοράσουν απευθείας.">Including parents and caregivers of adolescents with idiopathic scoliosis, who may purchase directly.</p>
+        </div>
+        <div class="aud">
+          <h3 data-el="Χρήστες προσθετικών μελών">People using prosthetic limbs</h3>
+          <p data-el="Που αντιμετωπίζουν ζέστη και εφίδρωση μέσα στη θήκη κατά τις καθημερινές δραστηριότητες.">Who deal with heat and perspiration inside the socket during daily activity.</p>
+        </div>
+        <div class="aud">
+          <h3 data-el="Εργαστήρια και κατασκευαστές ορθωτικής και προσθετικής">Orthotic and prosthetic labs and manufacturers</h3>
+          <p data-el="Που σχεδιάζουν και κατασκευάζουν κηδεμόνες και προθέσεις και θα μπορούσαν να ενσωματώσουν ή να προσφέρουν το A.C.T.I.S. μαζί τους.">Who design and produce braces and prostheses, and could integrate or offer A.C.T.I.S. alongside them.</p>
+        </div>
+        <div class="aud">
+          <h3 data-el="Κλινικές και κέντρα αποκατάστασης">Clinics and rehabilitation centres</h3>
+          <p data-el="Ορθοπαιδικές κλινικές, κέντρα αποκατάστασης και φυσικοθεραπείας, ορθωτιστές και προσθετιστές, ως πελάτες ή συνεργάτες διανομής. Η καλύτερη άνεση και συμμόρφωση μπορεί να ωφελήσει και την κλινική τους πρακτική.">Orthopaedic clinics, rehabilitation and physiotherapy centres, orthotists and prosthetists, as customers or distribution partners. Better comfort and adherence may also benefit their clinical practice.</p>
+        </div>
+      </div>
+
+      <div class="gap-box">
+        <div>
+          <h3 data-el="Τι υπάρχει σήμερα">What exists today</h3>
+          <p data-el="Υφάσματα που απομακρύνουν την υγρασία, εξειδικευμένα ενδύματα, αεριζόμενα σχέδια και υλικά αλλαγής φάσης μπορεί να προσφέρουν κάποια ανακούφιση, αλλά δεν αντιμετωπίζουν επαρκώς τη συσσώρευση θερμότητας και υγρασίας κατά την παρατεταμένη χρήση.">Moisture-wicking textiles, specialised undershirts, ventilated designs and phase-change materials may give some relief, but they do not adequately address heat and moisture build-up during prolonged wear.</p>
+        </div>
+        <div class="gaps">
+          <div>
+            <b data-el="Κηδεμόνες σκολίωσης">Scoliosis braces</b>
+            <span data-el="Σήμερα δεν υπάρχει αποκλειστική λύση ενεργητικής ψύξης.">No dedicated active-cooling solution currently exists.</span>
+          </div>
+          <div>
+            <b data-el="Προσθετικές θήκες">Prosthetic sockets</b>
+            <span data-el="Η ενεργητική ψύξη έχει διερευνηθεί σε ερευνητικά πρωτότυπα, αλλά οι εμπορικά διαθέσιμες λύσεις παραμένουν εξαιρετικά περιορισμένες.">Active cooling has been explored in research prototypes, but commercially available solutions remain extremely limited.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="team">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow" data-el="Η ομάδα">The team</p>
+        <h2 data-el="Τέσσερις ειδικότητες, ένα σύστημα.">Four disciplines, one system.</h2>
+        <p class="lede" data-el="Όλα τα μέλη είναι μεταπτυχιακοί φοιτητές στο ΠΜΣ «Translational Engineering in Health and Medicine» του Εθνικού Μετσόβιου Πολυτεχνείου (ΕΜΠ).">All members are postgraduate students in the MSc programme Translational Engineering in Health and Medicine at the National Technical University of Athens (NTUA).</p>
+      </div>
+
+      <div class="team">
+        <article class="person">
+          <div class="avatar" aria-hidden="true">DP</div>
+          <div>
+            <h3>Dimitra Prapa</h3>
+            <p class="role" data-el="Ιδρύτρια · HARDWARE">Founder · HARDWARE</p>
+            <p data-el="BSc στην Επιστήμη Υπολογιστών και Βιοϊατρική Πληροφορική, με ειδίκευση στα Έξυπνα Συστήματα και τη Ρομποτική. Υπόβαθρο σε hardware και ενσωματωμένα συστήματα, προσωπική εμπειρία με κηδεμόνες σκολίωσης και επαγγελματική εμπειρία σε εξειδικευμένο κέντρο σκολίωσης.">BSc in Computer Science and Biomedical Informatics, specialising in Intelligent Systems and Robotics. Background in hardware and embedded systems, personal experience with scoliosis braces and professional experience at a specialised scoliosis centre.</p>
+          </div>
+        </article>
+        <article class="person">
+          <div class="avatar" aria-hidden="true">GK</div>
+          <div>
+            <h3>Giannis Kontaxis</h3>
+            <p class="role" data-el="Μηχανική μάθηση">Machine learning</p>
+            <p data-el="BSc στην Εφαρμοσμένη Πληροφορική, με ειδίκευση στη Μηχανική Μάθηση, τα Νευρωνικά Δίκτυα και το Cloud Computing. Έχει αναπτύξει συστήματα ανίχνευσης με τεχνητή νοημοσύνη, έχει εργαστεί με μοντέλα βαθιάς μάθησης και έχει συμβάλει σε εφαρμογές λογισμικού για την υγεία.">BSc in Applied Informatics, specialising in Machine Learning, Neural Networks and Cloud Computing. Has developed AI-based detection systems, worked with deep learning models and contributed to healthcare software applications.</p>
+          </div>
+        </article>
+        <article class="person">
+          <div class="avatar" aria-hidden="true">ZG</div>
+          <div>
+            <h3>Zoi Georgakopoulou</h3>
+            <p class="role" data-el="Κλινική οπτική">Clinical insight</p>
+            <p data-el="BSc στη Νοσηλευτική με εξειδικευμένη εκπαίδευση στη Βιοϊατρική Μηχανική. Συνεισφέρει κλινική εμπειρία και κατανόηση των αναγκών των ασθενών.">BSc in Nursing with specialised training in Biomedical Engineering. Brings clinical expertise and insight into patient needs.</p>
+          </div>
+        </article>
+        <article class="person">
+          <div class="avatar" aria-hidden="true">GS</div>
+          <div>
+            <h3>Giorgos Soulounias</h3>
+            <p class="role" data-el="Βιοϋλικά">Biomaterials</p>
+            <p data-el="BSc στα Βιοϋλικά με εμπειρία σε έργα που σχετίζονται με την υγεία. Υποστηρίζει την επιλογή και τις ιδιότητες των υλικών για ένα ασφαλές, αποτελεσματικό και κατάλληλο φορητό σύστημα.">BSc in Biomaterials with experience in healthcare-related projects. Guides material properties and selection for a safe, efficient and suitable wearable system.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="progress">
+    <div class="wrap progress">
+      <div class="section-head" style="margin-bottom:0">
+        <p class="eyebrow" data-el="Πού βρισκόμαστε">Where we are</p>
+        <h2 data-el="Στα πρώτα βήματα.">Just getting started.</h2>
+        <p class="lede" data-el="Η ομάδα εργάζεται πάνω στο A.C.T.I.S. από τις αρχές Οκτωβρίου 2026.">The team has been working on A.C.T.I.S. since early October 2026.</p>
+      </div>
+      <ul class="milestones">
+        <li data-el="Πρώτο σχέδιο επιχειρηματικού μοντέλου">First draft of the business model</li>
+        <li data-el="Προκαταρκτική έρευνα αγοράς">Preliminary market research</li>
+        <li data-el="Πρώτη ανατροφοδότηση από δυνητικούς χρήστες">Early feedback from potential users</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong>A.C.T.I.S. · Adaptive Cooling and Temperature Intelligence System</strong>
+    <p data-el="Έργο πρώιμου σταδίου υπό ανάπτυξη. Δεν είναι ακόμη διαθέσιμο για αγορά ή κλινική χρήση.">An early-stage project under development. Not yet available for purchase or clinical use.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-el]'));
+  nodes.forEach(function (n) { n._en = n.textContent; });
+  var bEn = document.getElementById('lang-en');
+  var bEl = document.getElementById('lang-el');
+
+  function apply(lang) {
+    nodes.forEach(function (n) {
+      n.textContent = lang === 'el' ? n.getAttribute('data-el') : n._en;
+    });
+    document.documentElement.lang = lang;
+    bEn.setAttribute('aria-pressed', String(lang === 'en'));
+    bEl.setAttribute('aria-pressed', String(lang === 'el'));
+    try { localStorage.setItem('actis-lang', lang); } catch (e) {}
+  }
+
+  bEn.addEventListener('click', function () { apply('en'); });
+  bEl.addEventListener('click', function () { apply('el'); });
+
+  var saved = null;
+  try { saved = localStorage.getItem('actis-lang'); } catch (e) {}
+  if (saved === 'el') apply('el');
+})();
+</script>
+
+</body></html>
